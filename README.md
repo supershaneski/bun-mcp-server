@@ -12,12 +12,9 @@ You can read the full specification [here](https://modelcontextprotocol.io/speci
 
 ## Features
 
-- **Streamable HTTP Transport** — Serves MCP over a standard HTTP `POST` endpoint (`/mcp`), compatible with any MCP client that supports the HTTP transport.
-- **MCP Discovery** — Exposes a `GET /.well-known/mcp` endpoint so clients can auto-discover server capabilities.
+- **HTTP Transport** — Serves MCP over a standard HTTP `POST` endpoint (`/mcp`), compatible with any MCP client that supports the HTTP transport.
 - **JSON-RPC 2.0** — Fully compliant request/response framing with proper error codes (`-32700`, `-32600`, `-32601`, `-32602`, `-32603`).
-- **Tool Registry** — Pluggable tool system powered by [`@supershaneski/tool-registry`](https://www.npmjs.com/package/@supershaneski/tool-registry) for easy registration and execution of tools.
-- **CORS Enabled** — Pre-configured CORS headers allow requests from any origin, making browser-based MCP clients work out of the box.
-- **Graceful Shutdown** — Handles `SIGINT` for clean server teardown.
+- **Tool Registry** — Pluggable tool system for easy registration and execution of tools.
 
 ## Project Structure
 
