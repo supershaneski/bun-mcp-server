@@ -82,7 +82,21 @@ The main MCP endpoint. Accepts JSON-RPC 2.0 requests and dispatches them to the 
 
 ### `GET /.well-known/mcp`
 
-MCP server discovery endpoint. Returns metadata about the server including its name, description, transport type, and the URL of the MCP endpoint.
+This endpoint serves as the **MCP Server Card**. It provides essential metadata about the server—such as its name, description, supported transport types, and the base URL for the MCP endpoint—allowing clients to identify and connect to the service automatically.
+
+While this mechanism is not currently part of the official Model Context Protocol (MCP) specification, it addresses a critical gap: enabling HTTP-based MCP servers to be discoverable via standard web patterns and simplifying the process for users to add them to their environments.
+
+The return value will be mapped to the client's MCP server config file:
+```json
+{
+  "servers": {
+    "weather-server": {
+      "type": "http",
+      "url": "http://localhost/mcp"
+    }
+  }
+}
+```
 
 ### `* /*`
 
