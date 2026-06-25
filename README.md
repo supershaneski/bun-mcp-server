@@ -4,11 +4,21 @@ A lightweight HTTP-based [Model Context Protocol](https://modelcontextprotocol.i
 
 ## Motivation
 
-This project serves as a learning-focused implementation to explore the MCP lifecycle—from initialization and tool discovery to execution and error handling. By building this from scratch using Bun, the goal is to provide a clean, modular reference that demonstrates how the protocol functions under the hood, with a strict separation of concerns between HTTP routing and JSON-RPC 2.0 request handling. This decoupled architecture ensures the core logic remains transport-agnostic, allowing for future changes to the transport layer without requiring modifications to the implementation.
+This project explores the MCP lifecycle through a clean, modular implementation built with **Bun**. By separating HTTP routing from JSON-RPC 2.0 handling, the architecture aims to remain transport-agnostic, providing a clear reference for how the protocol functions under the hood.
 
-> [!Note] This project is a work in progress and does not implement the full Model Context Protocol specification; it focuses on essential patterns for reference and educational purposes. 
+> [!Note]
+> This is an educational, work-in-progress implementation and does not cover the full MCP specification.
 
-You can read the full specification [here](https://modelcontextprotocol.io/specification/2025-11-25/basic).
+---
+
+本プロジェクトは、**Bun** を使用したクリーンかつモジュール化された実装を通じて、MCP（Model Context Protocol）のライフサイクルを探求するものです。HTTPルーティングとJSON-RPC 2.0の処理を分離することでトランスポート層に依存しない設計を実現し、プロトコルの内部動作を理解するためのリファレンスとして機能します。
+
+> [!Note]
+> 本プロジェクトは学習・研究用であり、MCP仕様のすべてを実装しているわけではありません。
+
+
+You can read the full MCP specification [here](https://modelcontextprotocol.io/specification/2025-11-25/basic).
+
 
 ## Features
 
@@ -152,7 +162,8 @@ You can verify that this server functions correctly with an actual MCP client us
 ```
 4. **Refresh and Connect:** Save the file and return to the **Manage MCP Servers** menu. Click **Refresh**.
 
-> [!Note] Ensure your MCP server is already running locally before clicking refresh. Upon success, you will see connection activity in your server’s console logs.
+> [!Note] 
+> Ensure your MCP server is already running locally before clicking refresh. Upon success, you will see connection activity in your server’s console logs.
 
 5. **Run a Test:** Once connected, initiate a request via the chat interface (e.g., *"Let's test the MCP server. Get the weather for Tokyo today."*) to verify that the tool discovery and execution flows are working as expected.
 
