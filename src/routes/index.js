@@ -27,7 +27,6 @@ export default {
         let body
         try {
             body = await req.json()
-            console.log(body)
         } catch (err) {
             console.error(`Parse error: ${err.message}`)
             return Response.json({ 
