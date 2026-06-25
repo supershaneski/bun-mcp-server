@@ -5,10 +5,10 @@ export default {
     "/mcp": async (req) => {
         const pathname = new URL(req.url).pathname
         console.log(`[${now()}] ${req.method} ${pathname}`)
-        
+
         // Handle preflight
         if (req.method === 'OPTIONS') {
-            return new Response(null, { 
+            return new Response(null, {
                 status: 204,
                 headers: corsHeaders,
             })
@@ -16,9 +16,9 @@ export default {
 
         // Enforce POST requests
         if (req.method !== 'POST') {
-            return Response.json({ 
-                message: "Method not allowed" 
-            }, { 
+            return Response.json({
+                message: "Method not allowed"
+            }, {
                 status: 405,
                 headers: corsHeaders
             })
@@ -29,9 +29,9 @@ export default {
             body = await req.json()
         } catch (err) {
             console.error(`Parse error: ${err.message}`)
-            return Response.json({ 
+            return Response.json({
                 jsonrpc: "2.0",
-                id: null, 
+                id: null,
                 error: { code: -32700, message: "Parse error" }
             }, {
                 status: 200,
@@ -44,23 +44,23 @@ export default {
         const result = await mcpRequestHandler(body)
 
         if (result.status === 'accepted') {
-            return new Response(null, { 
-                status: 202, 
-                headers: corsHeaders 
+            return new Response(null, {
+                status: 202,
+                headers: corsHeaders
             })
         } else if (result.status === 'error') {
             return Response.json({
-                    jsonrpc: "2.0",
-                    id,
-                    error: { code: result.code, message: result.message }
-                }, { 
-                    status: 200, 
-                    headers: corsHeaders 
-                });
-        } else {
-            return Response.json({ 
                 jsonrpc: "2.0",
-                id, 
+                id,
+                error: { code: result.code, message: result.message }
+            }, {
+                status: 200,
+                headers: corsHeaders
+            });
+        } else {
+            return Response.json({
+                jsonrpc: "2.0",
+                id,
                 result: result.data,
             }, {
                 status: 200,
@@ -74,7 +74,7 @@ export default {
 
         // Handle preflight
         if (req.method === 'OPTIONS') {
-            return new Response(null, { 
+            return new Response(null, {
                 status: 204,
                 headers: corsHeaders,
             })
@@ -82,27 +82,23 @@ export default {
 
         // Enforce GET requests
         if (req.method !== 'GET') {
-            return Response.json({ 
-                message: "Method not allowed" 
-            }, { 
+            return Response.json({
+                message: "Method not allowed"
+            }, {
                 status: 405,
                 headers: corsHeaders
             });
         }
 
-        // MCP Server discovery endpoint info
+        // MCP Server Card
         const info = {
+            "title": "weather-server",
             "name": "Weather MCP",
             "description": "Provides weather information",
             "version": "1.0.0",
             "url": "http://localhost:3000/mcp",
-            "authentication": {
-                "type": "none"
-            },
-            "headers": {
-                "Content-Type": "application/json"
-            },
-            "transport": "HTTP",
+            "authentication": {}, // If no-auth, either omit or empty object is valid
+            "transport": "http",
             "categories": [
                 "weather"
             ],
