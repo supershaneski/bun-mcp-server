@@ -143,11 +143,36 @@ curl http://localhost:3000/.well-known/mcp
 
 ## Live Testing
 
-You can verify that this server functions correctly with an actual MCP client using AntiGravity. Follow these steps to connect and test:
+You can verify that the server is functioning correctly by connecting it to an MCP client, such as VS Code or AntiGravity.
 
-1. **Open MCP Configuration:** In the AntiGravity IDE, navigate to **Additional Options** (`...`) and select **MCP Servers**.
-2. **Manage Servers:** In the MCP Store panel, click **Manage MCP Servers**, then click **View raw config** to open the `mcp_config.json` file.
-3. **Add Server Entry:** Add the following configuration to your file:
+## VSCode
+Follow these steps to configure and connect:
+
+1. Create or open `.vscode/mcp.json` in your project directory.
+2. Add the following entry:
+```json
+{
+  "servers": {
+    "weather-server": {
+      "url": "http://localhost:3000/mcp",
+      "headers": {
+        "Content-Type": "application/json"
+      }
+    }
+  }
+}
+
+```
+3. In the VS Code Chat panel, click the **gear icon** to open the **Agent Customizations** dialog.
+4. Select **MCP Servers** from the sidebar. You should see `weather-server` listed under **Workspace**.
+5. Right-click `weather-server` and select **Start Server** from the context menu to initialize the connection.
+
+### AntiGravity
+Follow these steps to configure and connect:
+
+1. **Open Configuration:** Navigate to **Additional Options** (`...`) and select **MCP Servers**.
+2. **Manage Servers:** Click **Manage MCP Servers**, then select **View raw config** to open the `mcp_config.json` file.
+3. **Add Server:** Add the following configuration:
 ```json
 {
   "mcpServers": {
@@ -159,13 +184,20 @@ You can verify that this server functions correctly with an actual MCP client us
     }
   }
 }
+
 ```
-4. **Refresh and Connect:** Save the file and return to the **Manage MCP Servers** menu. Click **Refresh**.
+4. **Connect:** Save the file, return to the **Manage MCP Servers** menu, and click **Refresh**.
 
+---
 > [!Note] 
-> Ensure your MCP server is already running locally before clicking refresh. Upon success, you will see connection activity in your server’s console logs.
+> Ensure your MCP server is already running locally before connecting to either one. Upon success, you will see connection activity in your server’s console logs.
 
-5. **Run a Test:** Once connected, initiate a request via the chat interface (e.g., *"Let's test the MCP server. Get the weather for Tokyo today."*) to verify that the tool discovery and execution flows are working as expected.
+
+Once connected, confirm that tool discovery and execution are working by sending a prompt through your IDE's chat interface:
+
+> *"Let's test the MCP server. Get the weather for Tokyo today."*
+
+If successful, the chat should trigger the tool and return the relevant data from your server.
 
 
 ## Available Tools
