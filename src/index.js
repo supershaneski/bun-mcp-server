@@ -1,5 +1,16 @@
 import { now } from "./lib/utils"
 import routes from "./routes"
+import sessions from "./lib/sessions"
+
+setInterval(() => {
+    const now = Date.now()
+    for (const [id, session] of sessions) {
+        if (now - session.lastActivity > 5 * 60 * 1000) {
+            // Delete session
+            sessions.delete(id)
+        }
+    }
+}, 60 * 1000)
 
 const server = Bun.serve({
     port: 3000,

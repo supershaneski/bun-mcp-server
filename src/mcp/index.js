@@ -1,4 +1,5 @@
 import toolRegistry from "./tools"
+//import sessions from "../lib/sessions"
 
 export async function mcpRequestHandler(body) {
     try {
@@ -25,10 +26,13 @@ export async function mcpRequestHandler(body) {
 
         switch (method) {
             case "initialize":
+                //const id = crypto.randomUUID()
+                //sessions.set(id, { id, lastActivity: Date.now() })
                 result = {
                     status: 'response',
+                    //sessionId: id,
                     data: {
-                        protocolVersion: "2024-11-05",
+                        protocolVersion: "2025-11-25",
                         capabilities: {
                             tools: {}
                         },

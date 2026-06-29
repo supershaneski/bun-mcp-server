@@ -4,9 +4,17 @@ import * as path from "node:path"
 export const now = () => new Date().toLocaleString("ja-JP", { timeZone: "Asia/Tokyo" })
 
 export const corsHeaders = {
-    "Access-Control-Allow-Origin": "*",
-    "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
-    "Access-Control-Allow-Headers": "Content-Type, Accept",
+  "Access-Control-Allow-Origin": "*",
+  //"Access-Control-Allow-Methods": "GET, POST, OPTIONS",
+  //"Access-Control-Allow-Headers": "Content-Type, Accept",
+}
+
+export const corsHeaders2 = {
+  "Access-Control-Allow-Origin": "http://192.168.1.80:5173",
+  "Access-Control-Allow-Credentials": "true",
+  "Access-Control-Allow-Methods": "GET, POST, DELETE, OPTIONS",
+  "Access-Control-Allow-Headers": "Content-Type, Accept, mcp-session-id, mcp-protocol-version",
+  "Access-Control-Expose-Headers": "mcp-session-id",
 }
 
 export function logDebug(message) {
