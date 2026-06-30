@@ -1,28 +1,26 @@
-import { now, corsHeaders, corsHeaders2, logDebug } from "../lib/utils"
+import { now, corsHeaders, getCorsHeaders, logDebug } from "../lib/utils"
 import { mcpRequestHandler } from "../mcp"
 import sessions from "../lib/sessions"
+import { config } from "../config"
 
 export default {
     "/mcp": async (req) => {
         const pathname = new URL(req.url).pathname
         console.log(`[${now()}] ${req.method} ${pathname}`)
 
-        const origin = req.headers.get('origin')
-
         // TODO: Provide SSE response if client supports it
         // let accept = req.headers.get('accept') ?? ''
         // const isSSE = accept.split(',').includes('text/event-stream') // Check SSE
-        
+
         let sessionId = req.headers.get('mcp-session-id')
+        const protocolVersion = req.headers.get('mcp-protocol-version') ?? null
+        const headers = getCorsHeaders(req)
 
         // Handle preflight
         if (req.method === 'OPTIONS') {
             return new Response(null, {
                 status: 204,
-                headers: {
-                    ...corsHeaders2,
-                    "Access-Control-Allow-Origin": origin ?? "*"
-                },
+                headers,
             })
         }
 
@@ -32,36 +30,27 @@ export default {
                 message: "Method not allowed"
             }, {
                 status: 405,
-                headers: {
-                    ...corsHeaders2,
-                    "Access-Control-Allow-Origin": origin ?? "*"
-                }
+                headers
             })
         }
 
         if (req.method === 'DELETE') {
             if (!sessionId) {
-                return Response.json({ 
-                    message: "Missing session Id" 
-                }, { 
+                return Response.json({
+                    message: "Missing session Id"
+                }, {
                     status: 400,
-                    headers: {
-                        ...corsHeaders2,
-                        "Access-Control-Allow-Origin": origin ?? "*"
-                    }
+                    headers
                 });
             }
 
             const session = sessions.get(sessionId)
             if (!session) {
-                return Response.json({ 
-                    message: "Session not found" 
-                }, { 
+                return Response.json({
+                    message: "Session not found"
+                }, {
                     status: 404,
-                    headers: {
-                        ...corsHeaders2,
-                        "Access-Control-Allow-Origin": origin ?? "*"
-                    }
+                    headers
                 });
             }
 
@@ -69,10 +58,7 @@ export default {
             sessions.delete(sessionId)
             return new Response(null, {
                 status: 204,
-                headers: {
-                    ...corsHeaders2,
-                    "Access-Control-Allow-Origin": origin ?? "*"
-                }
+                headers
             })
 
         }
@@ -86,11 +72,8 @@ export default {
                 return Response.json({
                     message: "Session not found"
                 }, {
-                    status: 405,
-                    headers: {
-                        ...corsHeaders2,
-                        "Access-Control-Allow-Origin": origin ?? "*"
-                    }
+                    status: 404,
+                    headers
                 })
             }
 
@@ -108,21 +91,45 @@ export default {
                 error: { code: -32700, message: "Parse error" }
             }, {
                 status: 200,
-                headers: {
-                    ...corsHeaders2,
-                    "Access-Control-Allow-Origin": origin ?? "*"
-                }
+                headers
             })
         }
 
         const id = body.id !== undefined ? body.id : null;
+
+        // Protocol version validation
+        const isInitialize = body.method === "initialize"
+        const isNotification = body.method && body.method.startsWith("notifications/")
+
+        if (!isInitialize && !isNotification) {
+            if (!protocolVersion) {
+                return Response.json({
+                    jsonrpc: "2.0",
+                    id,
+                    error: { code: -32600, message: "Missing mcp-protocol-version header" }
+                }, {
+                    status: 400,
+                    headers
+                })
+            }
+            if (protocolVersion !== config.protocolVersion) {
+                return Response.json({
+                    jsonrpc: "2.0",
+                    id,
+                    error: { code: -32600, message: `Unsupported protocol version: ${protocolVersion}` }
+                }, {
+                    status: 400,
+                    headers
+                })
+            }
+        }
 
         const result = await mcpRequestHandler(body)
 
         if (result.status === 'accepted') {
             return new Response(null, {
                 status: 202,
-                headers: corsHeaders2
+                headers
             })
         } else if (result.status === 'error') {
             return Response.json({
@@ -131,10 +138,7 @@ export default {
                 error: { code: result.code, message: result.message }
             }, {
                 status: 200,
-                headers: {
-                    ...corsHeaders2,
-                    "Access-Control-Allow-Origin": origin ?? "*"
-                }
+                headers
             });
         } else {
             return Response.json({
@@ -144,8 +148,7 @@ export default {
             }, {
                 status: 200,
                 headers: {
-                    ...corsHeaders2,
-                    "Access-Control-Allow-Origin": origin ?? "*",
+                    ...headers,
                     ...(sessionId ? { "mcp-session-id": sessionId } : {})
                 },
             });
@@ -175,16 +178,14 @@ export default {
 
         // MCP Server Card
         const info = {
-            "title": "weather-server",
-            "name": "Weather MCP",
-            "description": "Provides weather information",
-            "version": "1.0.0",
-            "url": "http://localhost:3000/mcp",
-            "authentication": {}, // If no-auth, either omit or empty object is valid
-            "transport": "http",
-            "categories": [
-                "weather"
-            ],
+            title: config.title,
+            name: config.name,
+            description: config.description,
+            version: config.version,
+            url: new URL("/mcp", req.url).toString(),
+            authentication: {}, // If no-auth, either omit or empty object is valid
+            transport: "http",
+            categories: config.categories,
         }
 
         return Response.json(info, {

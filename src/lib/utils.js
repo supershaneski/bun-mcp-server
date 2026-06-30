@@ -10,11 +10,22 @@ export const corsHeaders = {
 }
 
 export const corsHeaders2 = {
-  "Access-Control-Allow-Origin": "http://192.168.1.80:5173",
   "Access-Control-Allow-Credentials": "true",
   "Access-Control-Allow-Methods": "GET, POST, DELETE, OPTIONS",
   "Access-Control-Allow-Headers": "Content-Type, Accept, mcp-session-id, mcp-protocol-version",
   "Access-Control-Expose-Headers": "mcp-session-id",
+}
+
+export function getCorsHeaders(req) {
+  const origin = req.headers.get("origin")
+  const headers = { ...corsHeaders2 }
+  if (origin) {
+    headers["Access-Control-Allow-Origin"] = origin
+  } else {
+    headers["Access-Control-Allow-Origin"] = "*"
+    delete headers["Access-Control-Allow-Credentials"]
+  }
+  return headers;
 }
 
 export function logDebug(message) {

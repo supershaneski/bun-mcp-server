@@ -1,4 +1,5 @@
 import toolRegistry from "./tools"
+import { config } from "../config"
 //import sessions from "../lib/sessions"
 
 export async function mcpRequestHandler(body) {
@@ -32,13 +33,13 @@ export async function mcpRequestHandler(body) {
                     status: 'response',
                     //sessionId: id,
                     data: {
-                        protocolVersion: "2025-11-25",
+                        protocolVersion: config.protocolVersion,
                         capabilities: {
                             tools: {}
                         },
                         serverInfo: {
-                            name: "weather-server",
-                            version: "1.0.0"
+                            name: config.name,
+                            version: config.version
                         }
                     }
                 }
