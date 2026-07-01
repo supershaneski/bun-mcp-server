@@ -24,16 +24,6 @@ export default {
             })
         }
 
-        // TODO: Allow GET
-        /*if (req.method === 'GET') {
-            return Response.json({
-                message: "Method not allowed"
-            }, {
-                status: 405,
-                headers
-            })
-        }*/
-
         if (req.method === 'GET' || req.method === 'DELETE') {
 
             if (!sessionId) {
