@@ -8,9 +8,9 @@ export default {
         const pathname = new URL(req.url).pathname
         console.log(`[${now()}] ${req.method} ${pathname}`)
 
-        // TODO: Provide SSE response if client supports it
-        // let accept = req.headers.get('accept') ?? ''
-        // const isSSE = accept.split(',').includes('text/event-stream') // Check SSE
+        const acceptedMediaTypes = (req.headers.get('accept') ?? '')
+            .split(',')
+            .map(type => type.split(";")[0].trim())
 
         let sessionId = req.headers.get('mcp-session-id')
         const protocolVersion = req.headers.get('mcp-protocol-version') ?? null
@@ -25,16 +25,17 @@ export default {
         }
 
         // TODO: Allow GET
-        if (req.method === 'GET') {
+        /*if (req.method === 'GET') {
             return Response.json({
                 message: "Method not allowed"
             }, {
                 status: 405,
                 headers
             })
-        }
+        }*/
 
-        if (req.method === 'DELETE') {
+        if (req.method === 'GET' || req.method === 'DELETE') {
+
             if (!sessionId) {
                 return Response.json({
                     message: "Missing session Id"
@@ -54,12 +55,30 @@ export default {
                 });
             }
 
-            // Delete session
-            sessions.delete(sessionId)
-            return new Response(null, {
-                status: 204,
-                headers
-            })
+            if (req.method === 'DELETE') {
+                // Delete session
+                sessions.delete(sessionId)
+                return new Response(null, {
+                    status: 204,
+                    headers
+                })
+            } else {
+                
+                if (acceptedMediaTypes.includes('text/event-stream')) {
+                    // Not handling streaming HTTP request for GET
+                    return Response.json({
+                        message: "Does not support text/event-stream"
+                    }, {
+                        status: 406,
+                        headers
+                    })
+                } else {
+                    return new Response(null, {
+                        status: 200,
+                        headers
+                    })
+                }
+            }
 
         }
 

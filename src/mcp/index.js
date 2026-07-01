@@ -123,6 +123,9 @@ export async function mcpRequestHandler(body) {
                     status: 'accepted'
                 }
                 break
+            case "ping":
+                result = {}
+                break
             default:
                 result = {
                     status: 'error',
@@ -133,7 +136,7 @@ export async function mcpRequestHandler(body) {
 
         return result
 
-    } catch(err) {
+    } catch (err) {
         return {
             status: 'error',
             code: -32603, // Internal error
