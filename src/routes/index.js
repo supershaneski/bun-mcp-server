@@ -1,7 +1,7 @@
 import { now, corsHeaders, getCorsHeaders, logDebug } from "../lib/utils"
 import { mcpRequestHandler } from "../mcp"
 import sessions from "../lib/sessions"
-import { config } from "../config"
+import { config } from "../../mcp.config.js"
 
 export default {
     "/mcp": async (req) => {

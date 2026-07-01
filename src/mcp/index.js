@@ -1,5 +1,5 @@
 import toolRegistry from "./tools"
-import { config } from "../config"
+import { config } from "../../mcp.config.js"
 //import sessions from "../lib/sessions"
 
 export async function mcpRequestHandler(body) {
