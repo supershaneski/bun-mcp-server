@@ -322,7 +322,7 @@ I haven't implemented Streamable HTTP in this project yet, as I'm still learning
 
 ### 2026-06-30 - MCP Server Card
 
-The idea is to introduce an MCP Server Card, similar to the Web App Manifest for web applications. A Server Card would provide standardized metadata that enables MCP clients and search engines to discover, identify, and understand MCP servers. It could also serve as the foundation for searchable directories of MCP servers, allowing users to easily discover and add servers to their MCP clients or IDEs.
+The idea is to introduce an MCP Server Card, similar to the Web App Manifest for web applications. A Server Card would provide standardized metadata that serves as the foundation for searchable directories of MCP servers, making it easy for users to discover and add servers to their MCP clients or IDEs. That’s the dream, at least.
 
 ## License
 
